@@ -9,6 +9,28 @@ function App() {
     price: 10,
     productBy: "facebook",
   });
+  const makePayment = (token) => {
+    const body = {
+      token,
+      product,
+    };
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    return fetch(`http://localhost:8282/payment`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+    })
+      .then((res) => {
+        console.log("RESPONSE ", res);
+        const { status } = res;
+        console.log("STATUS ", status);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <div className="App">
       <header className="App-header">
@@ -21,7 +43,16 @@ function App() {
         >
           Learn React
         </a>
-        <StripeCheckout />
+        <StripeCheckout
+          stripeKey="pk_test_51IJGhbICCrZuzDLrT6NV0pJW4oJqdI3mvvFOsicZv0jHjb36nhreFZywC1hfbiNDIfgJvaRDc4NzLHWBbbRpLN7Z00nCYtruIR"
+          token={makePayment}
+          name="Buy React"
+          amount={product.price * 100}
+        >
+          <button className="btn-large red">
+            Buy React in just ${product.price}
+          </button>
+        </StripeCheckout>
       </header>
     </div>
   );
